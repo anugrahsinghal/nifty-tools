@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>build-tools-pom</artifactId>
+
+    <packaging>pom</packaging>
+
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>build-tools-pom</artifactId>
+        <relativePath/>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <checkstyle.version>3.1.0</checkstyle.version>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
+	
+	<profiles>
+        <profile>
+            <id>checkstyle</id>
+            <activation>
+                <file>
+                    <missing>src/main/resources/checkstyle.skip</missing>
+                </file>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.version}</version>
+                        <configuration>
+                            <configLocation>${main.basedir}/src/main/resources/checkstyle.xml</configLocation>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+        <profile>
+            <id>spotbugs</id>
+            <activation>
+                <file>
+                    <missing>src/main/resources/spotbugs.skip</missing>
+                </file>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>4.2.0</version>
+                        <configuration>
+<!--                            <plugins>-->
+<!--                                <plugin>-->
+<!--                                    <groupId>com.mebigfatguy.sb-contrib</groupId>-->
+<!--                                    <artifactId>sb-contrib</artifactId>-->
+<!--                                    <version>7.4.7</version>-->
+<!--                                </plugin>-->
+<!--                            </plugins>-->
+<!--                            <failOnError>false</failOnError>-->
+                            <effort>Max</effort>
+                            <maxHeap>1024</maxHeap>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+        <profile>
+            <id>pmd</id>
+            <activation>
+                <file>
+                    <missing>src/main/resources/pmd.skip</missing>
+                </file>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>3.13.0</version> <!-- or use version from pluginManagement -->
+                        <configuration>
+                            <linkXRef>true</linkXRef>
+                            <format>html</format>
+                            <aggregate>true</aggregate>
+                            <failOnViolation>false</failOnViolation>
+                            <printFailingErrors>true</printFailingErrors>
+                            <analysisCache>true</analysisCache>
+                            <analysisCacheLocation>${project.build.directory}/pmd/pmd.cache</analysisCacheLocation>
+                            <rulesets>
+                                <ruleset>${main.basedir}/src/main/resources/ruleset.xml</ruleset>
+                            </rulesets>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+	
+	</project>
