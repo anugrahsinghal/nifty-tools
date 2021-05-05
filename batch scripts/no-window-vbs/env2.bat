@@ -1,0 +1,1 @@
+cmd /k "rundll32 sysdm.cpl,EditEnvironmentVariables"
